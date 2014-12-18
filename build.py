@@ -12,4 +12,5 @@ for name in os.listdir("modules"):
 		modname = name[:-3]
 		f.write("\tinit%s();\n" % modname)
 
+f.write("};")
 f.close()
