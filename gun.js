@@ -9,6 +9,11 @@ gunRotateImage.src = "img/gunRotate.png"
 function gunDraw(ctx, x, y)
 {
   //DRAWING A GUN
+  ctx.drawImage(gunBaseImage, x, y);
+  ctx.rotate(gunAngle);
+  ctx.drawImage(gunRotateImage, x, y);
+  ctx.rotate(-gunAngle);
+  
 }
 function gunRotate()
 {
