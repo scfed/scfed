@@ -12,15 +12,15 @@ var BUBBLE_RADIUS = 10;
 var BUBBLE_DIA = BUBBLE_RADIUS * 2;
 
 // how long are rows?
-var BUBBLE_ROW_LENGTH = 6;
+var BUBBLE_ROW_LENGTH = 12;
 
 // list of rows from top to bottom.
 // each row is an array of types.
 // TODO: make this dynamically generated, perhaps with a seed?
 var bubbleRows = [
-	[BUBBLE_PP, BUBBLE_PM, BUBBLE_TP, BUBBLE_TP, BUBBLE_TM, BUBBLE_TP],
-	[BUBBLE_PM, BUBBLE_PP, BUBBLE_TP, BUBBLE_PM, BUBBLE_TP, BUBBLE_TM],
-	[BUBBLE_TP, BUBBLE_TP, BUBBLE_PM, BUBBLE_PP, BUBBLE_PM, BUBBLE_PM]
+	[BUBBLE_PP, BUBBLE_PM, BUBBLE_TP, BUBBLE_TP, BUBBLE_TM, BUBBLE_TP, BUBBLE_PP, BUBBLE_PM, BUBBLE_TP, BUBBLE_TP, BUBBLE_TM, BUBBLE_TP],
+	[BUBBLE_PM, BUBBLE_PP, BUBBLE_TP, BUBBLE_PM, BUBBLE_TP, BUBBLE_PM, BUBBLE_PP, BUBBLE_TP, BUBBLE_PM, BUBBLE_TP, BUBBLE_TP],
+	[BUBBLE_TP, BUBBLE_TP, BUBBLE_PM, BUBBLE_PP, BUBBLE_PM, BUBBLE_PM, BUBBLE_TP, BUBBLE_TP, BUBBLE_PM, BUBBLE_PP, BUBBLE_PM, BUBBLE_PM]
 ]
 
 // images
@@ -44,12 +44,35 @@ function bubblePaint(ctx, x, y)
 	
 	for (i=0; i<bubbleRows.length; i++)
 	{
-		for (j=0; j<6; j++)
+		for (j=0; j<BUBBLE_ROW_LENGTH; j++)
 		{
 			var type = bubbleRows[i][j];
-			var img = bubbleImages[type];
-			
-			ctx.drawImage(img, x+BUBBLE_DIA*j, y+BUBBLE_DIA*i);
+			if (type != undefined)
+			{
+				var img = bubbleImages[type];
+
+				// so if 'i' (row number) is odd-indexed, offset=BUBBLE_RADIUS otherwise offset=0.
+				var offset = (i % 2) * BUBBLE_RADIUS;
+
+				ctx.drawImage(img, x+offset+BUBBLE_DIA*j, y+BUBBLE_DIA*i);
+			};
 		};
 	};
+};
+
+// place a ball on some row at some position
+function bubblePlace(rowIndex, pos, type)
+{
+	if (rowIndex == bubbleRows.length)
+	{
+		var newRow = [];
+		var i;
+		for (i=0; i<BUBBLE_ROW_LENGTH; i++)
+		{
+			newRow.push(undefined);
+		};
+		bubbleRows.push(newRow);
+	};
+
+	bubbleRows[rowIndex][pos] = type;
 };
