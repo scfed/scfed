@@ -60,6 +60,67 @@ function bubblePaint(ctx, x, y)
 	};
 };
 
+// this is called when a bubble of the specififed type pops, we must
+// make this cooperate with Scott's code to control the graph.
+function bonBubblePop(type)
+{
+	// TODO
+};
+
+var bubblesToPop = [];
+
+// pop bubbles starting at pos, and go left, right and then upwards.
+// also specify what bubble type to pop. Return true if any bubbles
+// at all were popped, false otherwise. This function does not actually
+// remove the balls from the screen; instead, it lists their positions in
+// the bubbleToPop list.
+function bubblePop(rowIndex, pos, type)
+{
+	if (bubbleRows[rowIndex][pos] != type)
+	{
+		return false;
+	};
+	
+	// pop the bubble itself
+	bubblesToPop.push([rowIndex, pos]);
+	
+	// pop to the left
+	var startPos = pos;
+	while ((bubbleRows[rowIndex][pos-1] == type) && (pos != 0))
+	{
+		bubblesToPop.push([rowIndex, pos-1]);
+		pos -= 1;
+	};
+	
+	// pop to the right
+	pos = startPos;
+	while ((bubbleRows[rowIndex][pos+1] == type) && (pos != BUBBLE_ROW_LENGTH-1))
+	{
+		bubblesToPop.push([rowIndex, pos+1]);
+		pos += 1;
+	};
+	
+	// try upwards
+	if (rowIndex > 0)
+	{
+		var shouldTryAnother = true;
+		if (pos > 0)
+		{
+			if (bubblePop(rowIndex-1, pos-1, type))
+			{
+				shouldTryAnother = false;
+			};
+		};
+		
+		if (shouldTryAnother)
+		{
+			bubblePop(rowIndex-1, pos, type);
+		};
+	};
+	
+	return true;
+};
+
 // place a ball on some row at some position
 function bubblePlace(rowIndex, pos, type)
 {
@@ -75,4 +136,16 @@ function bubblePlace(rowIndex, pos, type)
 	};
 
 	bubbleRows[rowIndex][pos] = type;
+	bubblesToPop = [];
+	bubblePop(rowIndex, pos, type);
+	
+	if (bubblesToPop.length >= 3)
+	{
+		var i;
+		for (i=0; i<bubblesToPop.length; i++)
+		{
+			var coords = bubblesToPop[i];
+			bubbleRows[coords[0]][coords[1]] = undefined;
+		}
+	};
 };
