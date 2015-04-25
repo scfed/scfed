@@ -1,4 +1,0 @@
-scfed
-=====
-
-SCFED Game Project
