@@ -70,7 +70,8 @@ Body {
 	padding-right:auto;
 }
 .btn:hover {
-	background: none repeat scroll 0% 0% #B3D4FC;	
+	background: none repeat scroll 0% 0% #B3D4FC;
+	cursor:pointer;	
 }
 
 canvas
@@ -130,9 +131,9 @@ canvas
 	var molImage = document.createElement("img");
 	molImage.src = "images/Player.png";
 	
-	//OBSTACLES IMAGE proper one: http://flyosity.com/images/_blogentries/networkicon/step4a.png
+	//OBSTACLES IMAGE
 	var obsImage = document.createElement("img");
-	obsImage.src = "http://www.engraversnetwork.com/files/placeholder.jpg";
+	obsImage.src = "images/obstacle.png";
 	
 	//BACKGROUND IMAGE
 	var backgroundImage = document.createElement("img");
@@ -193,7 +194,8 @@ canvas
 		frontCanvas = document.getElementById("frontCanvas");
 		bc = backCanvas.getContext("2d");
 		ctx = frontCanvas.getContext("2d");
-
+		
+		//BACKGROUND IS DRAWN WHEN GAME STARTS BUT HAVE IT HERE ANYWAY SO THAT IT IS SHOWN WHILST USER IS CHOOSING TEMP/PRESSURE FOR THE FIRST TIME
 		bc.drawImage(backgroundImage,0,0,backCanvas.width,backCanvas.height);
 	};
 	
@@ -243,6 +245,10 @@ canvas
 		return size;
 	}
 	
+	var easterEgg = function(){
+		alert("joe is the best");
+	};
+	
 	function getNoOfMolecules(pressure) {
 		var minCount = 1;
 		var maxCount = 5;
@@ -263,7 +269,9 @@ canvas
 		return speed;
 	}
 	
-	function drawTemplate() {
+	function drawBackground() {
+		
+		bc.drawImage(backgroundImage,0,0,backCanvas.width,backCanvas.height);
 				
 		var templateCanvas = document.getElementById("templateCanvas");
 		var tc = templateCanvas.getContext("2d");
@@ -327,7 +335,7 @@ canvas
 		var speed = getMoleculeSpeed(temperature);
 		var obsRadius = getObstacleSize(pressure);
 
-		var molY = 0.5*MOL_SIZE - 17.5; // -17.5 TO ACCOUNT FOR WHITESPACE... I DON'T REALLY KNOW WHY...
+		var molY = 0.5*MOL_SIZE - 17.5; // -17.5 TO ACCOUNT FOR WHITESPACE...
 		if (temperature < GOLDEN_TEMP_MIN) {
 			molAngle = 0;
 		}
@@ -367,7 +375,7 @@ canvas
 		}
 		
 		//DRAW TEMPLATE
-		drawTemplate();
+		drawBackground();
 	};
 
 	//MAIN LOOP
@@ -410,6 +418,29 @@ canvas
 	};
 	window.setInterval(main, 1); //THIS MAKES SURE THAT main IS CALLED EVERY 1 MS (OR AS QUICKLY AS POSSIBLE)
 	
+	// the popup
+	function showPopup()
+	{
+		document.getElementById("popup").style.visibility = "visible";
+	};
+	
+	function gotoTabInst()
+	{
+		document.getElementById("tabinst").style.display = "block";
+		document.getElementById("tabcred").style.display = "none";
+	};
+	
+	function gotoTabCred()
+	{
+		document.getElementById("tabinst").style.display = "none";
+		document.getElementById("tabcred").style.display = "block";
+	};
+	
+	function hidePopup()
+	{
+		document.getElementById("popup").style.visibility = "hidden";
+	};
+	
 </script>
 </head>
 
@@ -430,15 +461,27 @@ canvas
     <button onclick="start();">Click to test this.</button>
     </div>
     <br />
-    <div class="btn" style="margin-left:auto; margin-right:10px;">
+    <div onclick="start();" class="btn" style="margin-left:auto; margin-right:10px;">
     <p>Play Now</p>
     </div>
-    <div class="btn" style="margin-left:10px; margin-right:10px;">
+    <div onclick="showPopup();" class="btn" style="margin-left:10px; margin-right:10px;">
     <p>Instructions</p>
     </div>
-    <div class="btn" style="margin-left:10px; margin-right:auto;">
+    <div onclick="start();" class="btn" style="margin-left:10px; margin-right:auto;">
     <p>Reset Game</p>
     </div>
+    
+	<div id="popup" style="visibility: hidden; position: absolute; left: 10%; width: 80%; top: 10%; height: 80%; border: 1px block solid; background-color: white;">
+		<div class="tabstrip" style="display: block;">
+			<div class="tab" style="display: inline; border: 1px black solid; margin: 0;"><a href="javascript:gotoTabInst();">Instructions</a></div>
+			<div class="tab" style="display: inline; border: 1px black solid; margin: 0;"><a href="javascript:gotoTabCred();">Credits</a></div>
+			<div class="tab" style="display: inline; border: 1px black solid; background-color: red; margin: 0;"><a href="javascript:hidePopup();">X</a></div>
+	</div>
+	<div class="popup-content" style="display: block;">
+		<div id="tabinst" style="display: block;">Here are the instructions :)</div>
+		<div id="tabcred" style="display: none;">Here are the credits: Jake Mears and literally no one else</div>
+	</div>
+    
 <div>
 </body>
 </html>
