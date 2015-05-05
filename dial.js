@@ -9,6 +9,7 @@ var canvasctx;
 function dialredraw()
 {
 	this.canvasctx.clearRect(0, 0, 200, 600);
+	this.canvasctx.translate(-66, 0);
 	this.canvasctx.translate(100, 513);
 	this.canvasctx.rotate(this.angle);
 	this.canvasctx.drawImage(knobImage, -32, -32);
@@ -26,6 +27,7 @@ function dialredraw()
 	var height = this.getValue(461);
 	this.canvasctx.rect(68, 471 - height, 64, height);
 	this.canvasctx.fill();
+	this.canvasctx.translate(66, 0);
 };
 
 /**
@@ -34,7 +36,7 @@ function dialredraw()
 function dialMoveDial(x, y)
 {	
 	// get the coordinates relative to the center of the knob
-	var relX = x - 68 - 32;
+	var relX = x - /*68*/2 - 32;
 	var relY = y - 481 - 32;
 
 	this.angle = Math.atan2(relY, relX) + (0.5 * Math.PI);
@@ -110,12 +112,14 @@ function Dial(canvasID)
 		//alert(dialObject.canvaselement.offsetLeft);
 		var x = event.pageX - dialObject.canvaselement.offsetLeft;
 		var y = event.pageY - dialObject.canvaselement.offsetTop;
-		if ((x > 68) && (x < 132) && (y > 481) && (y < 545))
+		//if ((x > 68) && (x < 132) && (y > 481) && (y < 545))
+		if ((x > 2) && (x < 66) && (y > 481) && (y < 545))
 		{
 			dialObject.mouseDown = 1;
 			dialObject.moveDial(event.pageX-dialObject.canvaselement.offsetLeft, event.pageY-dialObject.canvaselement.offsetTop);
 		}
-		else if ((y > 10) && (y < 471))
+		//else if ((y > 10) && (y < 471))
+		else if ((y > 10) && (x < 405))
 		{
 			dialObject.mouseDown = 2;
 			dialObject.moveBar(event.pageY-dialObject.canvaselement.offsetTop);
@@ -142,12 +146,14 @@ function Dial(canvasID)
 		var y = finger.pageY - dialObject.canvaselement.offsetTop;
 		dialObject.debugLog("touchstart: (" + x + ", " + y + ")");
 		
-		if ((x > 68) && (x < 132) && (y > 481) && (y < 545))
+		//if ((x > 68) && (x < 132) && (y > 481) && (y < 545))
+		if ((x > 2) && (x < 66) && (y > 481) && (y < 545))
 		{
 			dialOjbect.mouseDown = 1;
 			dialObject.moveDial(x, y);
 		}
-		else if ((y > 10) && (x < 471))
+		//else if ((y > 10) && (x < 471))
+		else if ((y > 10) && (x < 405))
 		{
 			dialObject.mouseDown = 2;
 			dialObject.moveBar(y);
