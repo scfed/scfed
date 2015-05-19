@@ -1,5 +1,9 @@
 var knobImage = new Image();
 knobImage.src = "knob.png";
+var labelTemp = new Image();
+labelTemp.src = "images/label_temp.png";
+var labelPress = new Image();
+labelPress.src = "images/label_press.png";
 var angle = 0;
 var canvasctx;
 
@@ -15,7 +19,17 @@ function dialredraw()
 	this.canvasctx.drawImage(knobImage, -32, -32);
 	this.canvasctx.rotate(-this.angle);
 	this.canvasctx.translate(-100, -513);
-	
+
+	var img;
+	if (this.labelName == "temp")
+	{
+		img = labelTemp;
+	}
+	else
+	{
+		img = labelPress;
+	};
+
 	this.canvasctx.beginPath();
 	this.canvasctx.strokeStyle = "#ffffff";
 	this.canvasctx.rect(68, 10, 64, 461);
@@ -27,6 +41,8 @@ function dialredraw()
 	var height = this.getValue(461);
 	this.canvasctx.rect(68, 471 - height, 64, height);
 	this.canvasctx.fill();
+	this.canvasctx.drawImage(img, 68, 10);
+
 	this.canvasctx.translate(66, 0);
 };
 
@@ -83,7 +99,7 @@ function dialDebugLog(msg)
 /**
  * \param canvasID The ID of the canvas element.
  */
-function Dial(canvasID)
+function Dial(canvasID, labelImage)
 {
 	this.canvaselement = document.getElementById(canvasID);
 	this.canvasctx = this.canvaselement.getContext("2d");
@@ -98,6 +114,7 @@ function Dial(canvasID)
 	//this.setFillStyle("#000055", "#8888ff");
 	var bottomColor = this.canvaselement.getAttribute("data-bottom-color");
 	var topColor = this.canvaselement.getAttribute("data-top-color");
+	this.labelName = this.canvaselement.getAttribute("data-label-name");
 	this.setFillStyle(bottomColor, topColor);
 	
 	/**
